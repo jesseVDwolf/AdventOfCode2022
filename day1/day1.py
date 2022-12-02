@@ -19,6 +19,5 @@ with open(file_path, mode='r') as input_file:
     if len(calorie_list) > 0:
         total_calories_per_elve.append(sum(calorie_list))
 
-print(max(total_calories_per_elve))
-print(sorted(total_calories_per_elve))
-print(sum(sorted(total_calories_per_elve)[-3:]))
+print(max(total_calories_per_elve))                 # main
+print(sum(sorted(total_calories_per_elve)[-3:]))    # bonus
