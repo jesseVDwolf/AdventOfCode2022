@@ -15,7 +15,7 @@ class AOCDayTwo(AdventOfCodeDay):
     CONST_DRAW_POINTS = 3
     CONST_TYPE_POINTS = {"A": 1, "B": 2, "C": 3, "X": 1, "Y": 2, "Z": 3}
 
-    def __init__(self, session_key: str, day: int, year: int = 2022) -> None:
+    def __init__(self, session_key: str, day: int = 2, year: int = 2022) -> None:
         super().__init__(session_key, day, year)
 
     def solve_part_one(self) -> str:
@@ -76,7 +76,7 @@ class AOCDayTwo(AdventOfCodeDay):
 def main() -> None:
     if not load_dotenv(override=True):
         raise ValueError("Could not find .env file")
-    aoc = AOCDayTwo(day=2, session_key=os.environ["AOC_SESSION_KEY"])
+    aoc = AOCDayTwo(session_key=os.environ["AOC_SESSION_KEY"])
     aoc.set_input_stream()
 
     print(aoc.solve_part_one())
