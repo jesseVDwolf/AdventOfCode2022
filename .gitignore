@@ -134,3 +134,7 @@ dmypy.json
 # poetry
 dist/
 poetry.lock
+
+# input text files
+input.txt
+test_input.txt
