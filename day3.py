@@ -2,17 +2,15 @@ import os
 from functools import reduce
 from dotenv import load_dotenv
 
-from day import AdventOfCodeDay
+from day import AdventOfCodeDay, raise_if_stream_not_set
 
 
 class AOCDayThree(AdventOfCodeDay):
     def __init__(self, session_key: str, day: int = 3, year: int = 2022) -> None:
         super().__init__(session_key, day, year)
 
+    @raise_if_stream_not_set
     def solve_part_one(self) -> str:
-        if self._stream_input is None:
-            raise ValueError("Stream is not set. Use .set_stream_input() first.")
-
         sum_priorities = 0
         for line in self._stream_input.iter_lines(decode_unicode=True):
             rucksack_items = list(line)
@@ -33,10 +31,8 @@ class AOCDayThree(AdventOfCodeDay):
 
         return str(sum_priorities)
 
+    @raise_if_stream_not_set
     def solve_part_two(self) -> str:
-        if self._stream_input is None:
-            raise ValueError("Stream is not set. Use .set_stream_input() first.")
-
         data = self._stream_input.content.decode("utf-8")
         rucksack_data = [line for line in data.split("\n") if line != ""]
 

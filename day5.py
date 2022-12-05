@@ -3,17 +3,15 @@ from dotenv import load_dotenv
 from functools import reduce
 from itertools import groupby
 
-from day import AdventOfCodeDay
+from day import AdventOfCodeDay, raise_if_stream_not_set
 
 
 class AOCDayFive(AdventOfCodeDay):
     def __init__(self, session_key: str, day: int = 5, year: int = 2022) -> None:
         super().__init__(session_key, day, year)
 
+    @raise_if_stream_not_set
     def solve_part_one(self) -> str:
-        if self._stream_input is None:
-            raise ValueError("Stream is not set. Use .set_stream_input() first.")
-
         lines = list(self._stream_input.iter_lines(decode_unicode=True))
 
         stack_data, instructions = [
@@ -40,11 +38,8 @@ class AOCDayFive(AdventOfCodeDay):
         result_string = reduce(lambda x, y: x + y.pop()[1:2], stacks, "")
         return result_string
 
+    @raise_if_stream_not_set
     def solve_part_two(self) -> str:
-        # TODO Create a decorator to check the stream
-        if self._stream_input is None:
-            raise ValueError("Stream is not set. Use .set_stream_input() first.")
-
         lines = list(self._stream_input.iter_lines(decode_unicode=True))
 
         stack_data, instructions = [
@@ -77,7 +72,7 @@ class AOCDayFive(AdventOfCodeDay):
         return result_string
 
 
-# TODO Use __subclasses() to call all the implementations
+# TODO Use __subclasses__() to call all the implementations
 def main() -> None:
     if not load_dotenv(override=True):
         raise ValueError("Could not find .env file")

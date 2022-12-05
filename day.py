@@ -1,3 +1,4 @@
+import os
 import posixpath
 import requests as re
 from typing import Optional
@@ -7,7 +8,7 @@ from urllib.parse import urljoin
 class AdventOfCodeDay:
     AOC_BASE_URL = "https://adventofcode.com"
 
-    def __init__(self, session_key: str, day: int, year: int = 2022) -> None:
+    def __init__(self, session_key: str, day: int = -1, year: int = 2022) -> None:
         self._session = f"session={session_key}"
 
         self._stream_input: Optional[re.Response] = None
@@ -43,3 +44,12 @@ class AdventOfCodeDay:
 
     def solve_part_two(self) -> str:
         raise NotImplementedError("Should implement solve_part_two()")
+
+
+def raise_if_stream_not_set(f):
+    def wrap(day: AdventOfCodeDay):
+        if day._stream_input is None:
+            raise ValueError("Stream is not set. Use .set_stream_input() first.")
+        return f(day)
+
+    return wrap

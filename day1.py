@@ -1,17 +1,15 @@
 import os
 from dotenv import load_dotenv
 
-from day import AdventOfCodeDay
+from day import AdventOfCodeDay, raise_if_stream_not_set
 
 
 class AOCDayOne(AdventOfCodeDay):
     def __init__(self, session_key: str, day: int = 1, year: int = 2022) -> None:
         super().__init__(session_key, day, year)
 
+    @raise_if_stream_not_set
     def _get_elve_totals(self) -> list[int]:
-        if self._stream_input is None:
-            raise ValueError("Stream is not set. Use .set_stream_input() first.")
-
         elve_sum: int = 0
         elve_totals: list[int] = []
         for chunk in self._stream_input.iter_lines(decode_unicode=True):

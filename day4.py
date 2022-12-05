@@ -1,17 +1,15 @@
 import os
 from dotenv import load_dotenv
 
-from day import AdventOfCodeDay
+from day import AdventOfCodeDay, raise_if_stream_not_set
 
 
 class AOCDayFour(AdventOfCodeDay):
     def __init__(self, session_key: str, day: int = 4, year: int = 2022) -> None:
         super().__init__(session_key, day, year)
 
+    @raise_if_stream_not_set
     def solve_part_one(self) -> str:
-        if self._stream_input is None:
-            raise ValueError("Stream is not set. Use .set_stream_input() first.")
-
         total_pairs_fully_containing_other = 0
         for line in self._stream_input.iter_lines(decode_unicode=True):
             pair = line.split(",")
@@ -29,10 +27,8 @@ class AOCDayFour(AdventOfCodeDay):
 
         return str(total_pairs_fully_containing_other)
 
+    @raise_if_stream_not_set
     def solve_part_two(self) -> str:
-        if self._stream_input is None:
-            raise ValueError("Stream is not set. Use .set_stream_input() first.")
-
         total_pairs_partially_overlapping = 0
         for line in self._stream_input.iter_lines(decode_unicode=True):
             pair = line.split(",")

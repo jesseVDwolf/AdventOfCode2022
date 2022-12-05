@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 
-from day import AdventOfCodeDay
+from day import AdventOfCodeDay, raise_if_stream_not_set
 
 
 class AOCDayTwo(AdventOfCodeDay):
@@ -18,10 +18,8 @@ class AOCDayTwo(AdventOfCodeDay):
     def __init__(self, session_key: str, day: int = 2, year: int = 2022) -> None:
         super().__init__(session_key, day, year)
 
+    @raise_if_stream_not_set
     def solve_part_one(self) -> str:
-        if self._stream_input is None:
-            raise ValueError("Stream is not set. Use .set_stream_input() first.")
-
         line: str
         total_points = 0
         for line in self._stream_input.iter_lines(decode_unicode=True):
@@ -39,10 +37,8 @@ class AOCDayTwo(AdventOfCodeDay):
 
         return str(total_points)
 
+    @raise_if_stream_not_set
     def solve_part_two(self) -> str:
-        if self._stream_input is None:
-            raise ValueError("Stream is not set. Use .set_stream_input() first.")
-
         line: str
         total_points = 0
         for line in self._stream_input.iter_lines(decode_unicode=True):
