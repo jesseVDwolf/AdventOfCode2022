@@ -72,7 +72,6 @@ class AOCDayFive(AdventOfCodeDay):
         return result_string
 
 
-# TODO Use __subclasses__() to call all the implementations
 def main() -> None:
     if not load_dotenv(override=True):
         raise ValueError("Could not find .env file")

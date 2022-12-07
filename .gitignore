@@ -138,3 +138,4 @@ poetry.lock
 # input text files
 input.txt
 test_input.txt
+.tmp/
