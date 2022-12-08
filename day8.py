@@ -18,7 +18,6 @@ class AOCDayEight(AdventOfCodeDay):
         ]
         return matrix
 
-    @raise_if_stream_not_set
     def solve_part_one(self) -> str:
         matrix = self._get_input()
 
