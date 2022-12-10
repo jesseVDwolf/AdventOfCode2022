@@ -4,7 +4,7 @@ from day import AdventOfCodeDay
 
 from importlib import import_module
 
-for i in range(1, 8):
+for i in range(1, 10):
     import_module(f"day{i}")
 
 if __name__ == "__main__":

@@ -1,115 +1,68 @@
-import copy
+import os
+from dotenv import load_dotenv
 
-with open('input.txt', mode='r') as input_file:
-    instructions = list(map(lambda x: (x[0], int(x[1])), [ 
-        v.split()
-        for v in input_file.read().splitlines()
-    ]))
+from day import AdventOfCodeDay, raise_if_stream_not_set
 
-def print_grid(pos_head: list[int], pos_tail: list[int], visited: set[tuple[int, int]]) -> None:
-    print(pos_head, pos_tail)
-    for y in range(-10, 10):
-        for x in range(-10, 10):
-            if pos_head[0] == x and pos_head[1] == y:
-                print('H', end='')
-            elif pos_tail[0] == x and pos_tail[1] == y:
-                print('T', end='')
-            elif (x, y) in visited:
-                print('#', end='')
+
+class AOCDayNine(AdventOfCodeDay):
+    """Most code is from `dmalacov`. See her repository here: https://github.com/dmalac"""
+
+    CONST_DIRECTION: dict[str, tuple[int, int]] = {
+        "R": (1, 0),
+        "L": (-1, 0),
+        "U": (0, 1),
+        "D": (0, -1),
+    }
+
+    def __init__(self, session_key: str, day: int = 9, year: int = 2022) -> None:
+        super().__init__(session_key, day, year)
+
+    def _move_knot(self, p: list, k: list):
+        """Where `p` is the previous knot and `k` the current knot"""
+        if abs(k[0] - p[0]) > 1 or abs(k[1] - p[1]) > 1:
+            k[0] += 0 if p[0] == k[0] else int((p[0] - k[0]) / abs(p[0] - k[0]))
+            k[1] += 0 if p[1] == k[1] else int((p[1] - k[1]) / abs(p[1] - k[1]))
+
+    def _move_rope(self, knots: list, instruction: str, places: set[tuple[int, int]]):
+        for idx, knot in enumerate(knots):
+            if idx == 0:
+                knot[0] += self.CONST_DIRECTION[instruction][0]
+                knot[1] += self.CONST_DIRECTION[instruction][1]
             else:
-                print('.', end='')
-        print()
-    print()
-                
+                self._move_knot(knots[idx - 1], knot)
+        places.add((knots[-1][0], knots[-1][1]))
 
-# initial state is H and T are at the same position
-START_POS = [0, 0]  # x, y
+    def _solve(self, rope_length: int) -> str:
+        instructions = self._stream_input.iter_lines(decode_unicode=True)
 
-pos_head = copy.copy(START_POS)
-pos_tail = copy.copy(START_POS)
+        knots = [[0, 0] for _ in range(rope_length)]
+        places: set[tuple[int, int]] = set()
+        for line in instructions:
+            instruction, steps = line.split()
+            for _ in range(int(steps)):
+                self._move_rope(knots, instruction, places)
 
-positions_visited: set[tuple[int, int]] = {tuple(START_POS)}
-# print_grid(pos_head, pos_tail, positions_visited)
-for instruction, steps in instructions:
+        return str(len(places))
 
-    # print(instruction, steps)
-    match instruction:
+    @raise_if_stream_not_set
+    def solve_part_one(self) -> str:
+        return self._solve(rope_length=2)
 
-        # right
-        case 'R':
-            for _ in range(steps):
-                # move head
-                pos_head[0] += 1
-                # print_grid(pos_head, pos_tail, positions_visited)
-                # move tail
-                # check if head on top of tail
-                if abs(pos_tail[1] - pos_head[1]) > 1 or  abs(pos_tail[0] - pos_head[0]) > 1:
-                
-                    # check if diagonally
-                    if abs(pos_head[1] - pos_tail[1]) > 0:
-                        pos_tail[1] = pos_head[1]
-                    
-                    pos_tail[0] += 1
-                    positions_visited.add(tuple(pos_tail))
-                
-                # print_grid(pos_head, pos_tail, positions_visited)
-
-        # left
-        case 'L':
-            for _ in range(steps):
-                # move head
-                pos_head[0] -= 1 
-                # print_grid(pos_head, pos_tail, positions_visited)
-                # move tail
-                # check if head on top of tail
-                if abs(pos_tail[1] - pos_head[1]) > 1 or  abs(pos_tail[0] - pos_head[0]) > 1:
-                
-                    # check if diagonally
-                    if abs(pos_head[1] - pos_tail[1]) > 0:
-                        pos_tail[1] = pos_head[1]
-                    
-                    pos_tail[0] -= 1
-                    positions_visited.add(tuple(pos_tail))
-                
-                # print_grid(pos_head, pos_tail, positions_visited)
-        
-        # up
-        case 'U':
-            for _ in range(steps):
-                # move head
-                pos_head[1] += 1
-                # print_grid(pos_head, pos_tail, positions_visited)
-                # move tail
-                # check if head on top of tail
-                if abs(pos_tail[1] - pos_head[1]) > 1 or  abs(pos_tail[0] - pos_head[0]) > 1:
-                
-                    # check if diagonally
-                    if abs(pos_head[0] - pos_tail[0]) > 0:
-                        pos_tail[0] = pos_head[0]
-                    
-                    pos_tail[1] += 1
-                    positions_visited.add(tuple(pos_tail))
-                
-                # print_grid(pos_head, pos_tail, positions_visited)
+    @raise_if_stream_not_set
+    def solve_part_two(self) -> str:
+        return self._solve(rope_length=10)
 
 
-        # down
-        case 'D':
-            for _ in range(steps):
-                # move head
-                pos_head[1] -= 1 
-                # print_grid(pos_head, pos_tail, positions_visited)
-                # move tail
-                # check if head on top of tail
-                if abs(pos_tail[1] - pos_head[1]) > 1 or  abs(pos_tail[0] - pos_head[0]) > 1:
-                
-                    # check if diagonally
-                    if abs(pos_head[1] - pos_tail[1]) > 0:
-                        pos_tail[0] = pos_head[0]
-                    
-                    pos_tail[1] -= 1
-                    positions_visited.add(tuple(pos_tail))
-                
-                # print_grid(pos_head, pos_tail, positions_visited)
+def main() -> None:
+    if not load_dotenv(override=True):
+        raise ValueError("Could not find .env file")
+    aoc = AOCDayNine(session_key=os.environ["AOC_SESSION_KEY"])
+    aoc.set_input_stream()
 
-print(len(positions_visited))
+    print(aoc.solve_part_one())
+    aoc.reset_input_stream()
+    print(aoc.solve_part_two())
+
+
+if __name__ == "__main__":
+    main()
